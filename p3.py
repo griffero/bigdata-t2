@@ -4,6 +4,7 @@ from mrjob.protocol import JSONValueProtocol
 import re
 import itertools
 from csv import reader
+import time
 
 class UsersCount(MRJob):
     INPUT_PROTOCOL = JSONValueProtocol
@@ -65,4 +66,10 @@ class UsersCount(MRJob):
             ]
 
 if __name__ == '__main__':
+    print "Begin..."
+    time_init = time.time()
     UsersCount.run()
+    duration = time.time() - time_init
+    print "End!"
+    print "________________________________"
+    print "Query duration: {0}".format(duration)

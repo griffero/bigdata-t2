@@ -5,6 +5,8 @@ import re
 import itertools
 from csv import reader
 import math
+import time
+
 BUSINESS_HASH = 0
 REVIEW_STARS = 1
 
@@ -53,4 +55,10 @@ class UsersCount(MRJob):
             ]
 
 if __name__ == '__main__':
+    print "Begin..."
+    time_init = time.time()
     UsersCount.run()
+    duration = time.time() - time_init
+    print "End!"
+    print "________________________________"
+    print "Query duration: {0}".format(duration)
