@@ -61,7 +61,7 @@ review. Finalmente un último review busca el máximo determinando así el revie
 
 
 ```
-python p2.py business_short.json
+python p2.py review_short.json
 ```
 
 Para la pregunta nº2 se utilizaron 3 maps y 3 reduce. Primero se hace un map entre user y business. Luego un reduce arma una nueva key que contiene el usuario y la cantidad de reviews que ha hecho y como value toma una lista de business donde ha hecho review. Posteriormente, se hace un map business - user, amount of reviews. En el siguiente reduce, utilizando [itertools](https://docs.python.org/2/library/itertools.html) se hace la combinatoria entre todos los pares de usuarios que hicieron review sobre el mismo lugar. Con esto ya se tiene toda la información necesaria para calcular el índice de Jaccard. El siguiente map y reduce simplemente obtienen el indice de Jaccard cuando este es mayor a 0.5
@@ -82,10 +82,12 @@ pondere los resultados según los votos recibidos en el comentario.
 
 
 ```
-python p3.py business_short.json
+python p3.py business_short.json review_short.json
 ```
 
-La pregunta nº3 utilizá 2 maps y 3 reduce. El primer map es el encargado de hacer el join entre el archivo business y review. Para hacer esto, se verifica que exista la llave en el JSON. Dado que business.JSON no contiene user_id, se pregunta si esta existe, si existe se hace un yield que incluye en en el valor del elemento la etiqueta "review". En el caso contrario, se utiliza la etiqueta "business". Con esta estrategia, el siguiente reduce verifica para cada elemento de la lista la etiqueta que este posee en la primera posición. En base a esta condición el reduce hace diferentes cosas con el objetivo de que para cada business exista una lista de categorias. Posteriormente un 
+La pregunta nº3 utilizá 2 maps y 3 reduce. El primer map es el encargado de hacer el join entre el archivo business y review. Para hacer esto, se verifica que exista la llave en el JSON. Dado que business.JSON no contiene user_id, se pregunta si esta existe, si existe se hace un yield que incluye en en el valor del elemento la etiqueta "review". En el caso contrario, se utiliza la etiqueta "business". Con esta estrategia, el siguiente reduce verifica para cada elemento de la lista la etiqueta que este posee en la primera posición. En base a esta condición el reduce hace diferentes cosas con el objetivo de que para cada business exista una lista de categorias. Posteriormente un map vincula a cada usuario con sus diferentes categorías donde ha hecho reviews. (recorcemos que el user contiene en su interior tambien la cantidad de votos). Luego un reduce cuenta los reviews que ha hecho el usuario en cada categoría para que finalmente otro reduce determine para cada reduce el user que más reviews realizó.
+
+Cabe destacar que se utilizó el dataset completo de Business. El motivo de lo anterior es que si no se utiliza el data set completo, existe la posibilidad de que existan reviews que no se puedan vincular con el business y por ende con una categoría.
 
 **Resultados**
 
@@ -94,7 +96,27 @@ La pregunta nº3 utilizá 2 maps y 3 reduce. El primer map es el encargado de ha
 |                 10.000|           Full dataset |                       14.9 s|
 |                 30.000|           Full dataset |                       43.2 s|
 
-El resultado entrega el par categoria - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoria (funny + cool + useful) y a esto se el divide la cantidad de reviews.
+El resultado entrega el par categoría - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoria (funny + cool + useful) y a esto se el divide la cantidad de reviews.
+
+### P4
+
+**Pregunta:** Considere la siguiente formula como una métrica de similaridad dada en el enunciado.
+
+```
+python p4.py review_short.json
+```
+
+
+**Resultados**
+
+| Tamaño Dataset | Tiempo de ejecución |
+| -------------: |--------------------:|
+| 10.000         |              106.7 s|
+| 30.000         |              396.2 s|
+
+El resultado entrega el par categoría - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoria (funny + cool + useful) y a esto se el divide la cantidad de reviews.
+
+
 
 
 
