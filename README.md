@@ -102,6 +102,8 @@ El resultado entrega el par categoría - usuario con más reviews. Dentro de cad
 
 **Pregunta:** Considere la siguiente formula como una métrica de similaridad dada en el enunciado.
 
+![alt similarity](https://i.imgur.com/9dc1hrt.png)
+
 ```
 python p4.py review_short.json
 ```
