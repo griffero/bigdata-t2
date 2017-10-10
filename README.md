@@ -94,7 +94,7 @@ La pregunta nº3 utilizá 2 maps y 3 reduce. El primer map es el encargado de ha
 |                 10.000|           Full dataset |                       14.9 s|
 |                 30.000|           Full dataset |                       43.2 s|
 
-Con el conjunto de datos utilizado, se puede evidenciar que existen muchos pares de usuarios con índice de Jaccard = 1. Esto se debe a que existen usuarios que solamente hicieron reviews sobre un establecimiento por lo que cualquier par de usuarios que hacen reviews de un solo establecimiento son iguales en términos del índice de Jaccard.
+El resultado entrega el par categoria - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoria (funny + cool + useful) y a esto se el divide la cantidad de reviews.
 
 
 
