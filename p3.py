@@ -12,29 +12,30 @@ class UsersCount(MRJob):
         if user_data.get("user_id"):
             # movie_id, ["user", user_id]
             # business_id, ["review", user_id]
-            yield user_data["business_id"], ["review", user_data["user_id"]]
+            score_points = user_data["useful"] + user_data["funny"] + user_data["cool"]
+            yield user_data["business_id"], ["review", user_data["user_id"], score_points ]
         elif user_data.get("business_id"):
             # movie_id, ["movie", categories]
             # business_id, ["business", categories]
             yield user_data["business_id"],["business", user_data["categories"]]
 
     def reducer_join(self, key, values):
-        movie_list = list(values)
-        movie_category_user = []
-        for element in movie_list:
+        business_list = list(values)
+        business_category_review = []
+        for element in business_list:
             if element[0] == "business":
-                movie_category_user.append(element[1])
+                business_category_review.append(element[1])
             else:
-                movie_category_user.append(element)
-        if len(movie_category_user) > 1:
-            yield key, movie_category_user
+                business_category_review.append(element)
+        if len(business_category_review) > 1:
+            yield key, business_category_review
 
     def user_category_map(self, key, value):
         categories = value[0]
         for element in value:
             if element[0] == "review":
                 for category in categories:
-                    yield element[1], category
+                    yield [element[1], element[2]], category
 
 
     def user_category_reducer(self,key, value):
@@ -46,7 +47,11 @@ class UsersCount(MRJob):
 
     def get_max_reducer(self,key, value):
         max_category_list = list(value)
-        yield key, max(max_category_list, key=lambda item: item[1])
+        max_in_category = max(max_category_list, key=lambda item: item[1])
+        user_hash = max_in_category[0][0]
+        total_votes_in_category = float(max_in_category[0][1])
+        total_reviews_in_category = float(max_in_category[1])
+        yield key, [user_hash, total_votes_in_category/total_reviews_in_category]
 
     def steps(self):
         return [
