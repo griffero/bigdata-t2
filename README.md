@@ -30,6 +30,8 @@ Cabe mencionar que tomar los primeros 3000 datos no es la mejor manera de reduci
 Con respecto a los benchmarks, se utilizó [time](https://docs.python.org/2/library/time.html) para medir los tiempos de
 ejecución.
 
+## Preguntas
+
 ### P1
 
 **Pregunta:** Usando mrjob, encuentre el comentario (review) "más único": Consiste en el comentario que use la mayor cantidad
