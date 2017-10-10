@@ -12,8 +12,8 @@ Yelp en formato JSON.
 
 La tarea se realizó utilizando python en conjunto con [mrjob](https://github.com/Yelp/mrjob).
 
-En primera instancia se redujo el dataset con el objetivo de disminuir los tiempos de ejecución con el objetivo de poder
-probar eficientemente el código
+En primera instancia, se redujo el dataset con el objetivo de disminuir los tiempos de ejecución con el objetivo de poder
+probar eficientemente el código.
 
 ```
 head -n 3000 user.json > user_short.json
@@ -25,8 +25,7 @@ head -n 3000 review.json > review_short.json
 head -n 3000 business.json > business_short.json
 ```
 
-Cabe mencionar que tomar los primeros 3000 no es la mejor manera de reducir el dataset ya que se produce un sesgo importante
-en los resultados.
+Cabe mencionar que tomar los primeros 3000 datos no es la mejor manera de reducir el dataset ya que se produce un sesgo importante en los resultados.
 
 Con respecto a los benchmarks, se utilizó [time](https://docs.python.org/2/library/time.html) para medir los tiempos de
 ejecución.
@@ -42,9 +41,8 @@ python p1.py review_short.json
 ```
 
 Para esta pregunta, se utilizó 1 map y 3 reduce. El funcionamiento de la consulta es en primer lugar realizar un map 
-entre cada palabra de un review con el id del review mismo. Luego con un reduce, para cada palabra, se revisa si esta es única
-en todos los reviews. Si es unica se emite el id_review, 1 y luego otro reduce agrupa la cantidad de palabras únicas por cada
-review. Finalmente un último review busca el máximo determinando así el review más único.
+entre cada palabra de un review con el id del review mismo. Luego, con un reduce para cada palabra, se revisa si esta es única
+entre todos los reviews. Si es unica se emite el id_review, 1 y luego otro reduce agrupa la cantidad de palabras únicas por cada review. Finalmente un último reduce busca el máximo determinando así el review más único.
 
 **Resultados**
 
@@ -64,7 +62,7 @@ review. Finalmente un último review busca el máximo determinando así el revie
 python p2.py review_short.json
 ```
 
-Para la pregunta nº2 se utilizaron 3 maps y 3 reduce. Primero se hace un map entre user y business. Luego un reduce arma una nueva key que contiene el usuario y la cantidad de reviews que ha hecho y como value toma una lista de business donde ha hecho review. Posteriormente, se hace un map business - user, amount of reviews. En el siguiente reduce, utilizando [itertools](https://docs.python.org/2/library/itertools.html) se hace la combinatoria entre todos los pares de usuarios que hicieron review sobre el mismo lugar. Con esto ya se tiene toda la información necesaria para calcular el índice de Jaccard. El siguiente map y reduce simplemente obtienen el indice de Jaccard cuando este es mayor a 0.5
+Para la pregunta nº2 se utilizaron 3 maps y 3 reduce. Primero se hace un map entre user y business. Luego un reduce arma una nueva key que contiene el usuario y la cantidad de reviews que ha hecho y value toma la lista de business donde ha hecho review dicho usuario. Posteriormente, se hace un map business, user-amount of reviews. En el siguiente reduce, utilizando [itertools](https://docs.python.org/2/library/itertools.html) se hace la combinatoria entre todos los pares de usuarios que hicieron review sobre el mismo lugar. Con esto ya se tiene toda la información necesaria para calcular el índice de Jaccard. El siguiente map y reduce simplemente obtienen el índice de Jaccard cuando este es mayor a 0.5.
 
 **Resultados**
 
@@ -73,7 +71,7 @@ Para la pregunta nº2 se utilizaron 3 maps y 3 reduce. Primero se hace un map en
 | 10.000         |              137.6 s|
 | 30.000         |              396.2 s|
 
-Con el conjunto de datos utilizado, se puede evidenciar que existen muchos pares de usuarios con índice de Jaccard = 1. Esto se debe a que existen usuarios que solamente hicieron reviews sobre un establecimiento por lo que cualquier par de usuarios que hacen reviews de un solo establecimiento son iguales en términos del índice de Jaccard.
+Con el conjunto de datos utilizado, se puede evidenciar que existen muchos pares de usuarios con índice de Jaccard = 1. Esto se debe a que existen usuarios que solamente hicieron reviews sobre un solo lugar por lo que cualquier par de usuarios que hacen reviews de un solo establecimiento son iguales en términos del índice de Jaccard.
 
 ### P3
 
