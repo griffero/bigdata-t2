@@ -6,6 +6,7 @@ import itertools
 
 class UsersCount(MRJob):
     INPUT_PROTOCOL = JSONValueProtocol
+
     def mapper_separate_text(self, _, line):
         review = line['review_id']
         text = line['text'].split()

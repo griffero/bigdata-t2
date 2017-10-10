@@ -5,25 +5,27 @@ import re
 import itertools
 from csv import reader
 import math
+BUSINESS_HASH = 0
+REVIEW_STARS = 1
 
 class UsersCount(MRJob):
     INPUT_PROTOCOL = JSONValueProtocol
-    def initial_map(self, _, line):
-        business = line['business_id']
-        users = line['user_id']
-        stars = line ['stars']
-        yield users, [business, stars]
 
-    def reducer1(self, key, values):
-        _values = list(values)
-        _sum = 0
-        for values in _values:
-            _sum += values[1]**2
-        # users, [business, stars]
-        # yield [key, _sum], _values
-        for value in _values:
+    def map_users_with_busines(self, _, line):
+        business = line['business_id']
+        user = line['user_id']
+        # Normalize stars.
+        stars = float(line['stars'])/5
+        yield user, [business, stars]
+
+    def reduce_users_business(self, user, business):
+        business_list = list(business)
+        sum_of_stars_per_user = 0
+        for business in business_list:
+            sum_of_stars_per_user += business[REVIEW_STARS]**2
+        for business in business_list:
             # business, [[user,total_sum], star]
-            yield value[0], [[key,_sum], value[1]]
+            yield business[BUSINESS_HASH], [[user, sum_of_stars_per_user], business[REVIEW_STARS]]
 
     def reducer_multiply(self, key, values):
         for subset in itertools.combinations(values,2):
@@ -39,8 +41,8 @@ class UsersCount(MRJob):
     def steps(self):
         return [
             MRStep(
-                mapper=self.initial_map,
-                reducer=self.reducer1
+                mapper=self.map_users_with_busines,
+                reducer=self.reduce_users_business
                 ),
             MRStep(
                 reducer=self.reducer_multiply
