@@ -106,15 +106,20 @@ El resultado entrega el par categoría - usuario con más reviews. Dentro de cad
 python p4.py review_short.json
 ```
 
+La manera de abordar el problema 4 es bastante similar al de la p2. El problema se solucionó con 1 map y 3 reduce. Primero se hace un map usuario , business-star donde la estrella esta normalizada (dividida en 5). Luego, el reduce obtiene para cada usuario la lista de business donde hizo reviews, y suma la cantidad de estrellas totales en todos los reviews de ese usuario. Luego emite para cada business con el usuario respectivo del review que además contiene la suma de las estrellas del usuario y las estrellas que le otorgó a ese business en particular. Un siguiente reduce utilizando itertools al igual que en la P2 crea para cada business pares de usuarios que hicieron review. Finalmente un último reduce va tomando estos pares de usuarios y calcula la métrica de similaridad. Todos los datos necesarios para calcular la similaridad estan contenidos en el par key-value. key continene lo necesario para el dividendo y value lo que se necesita para el divisor.
 
 **Resultados**
 
 | Tamaño Dataset | Tiempo de ejecución |
 | -------------: |--------------------:|
 | 10.000         |              106.7 s|
-| 30.000         |              396.2 s|
+| 30.000         |              288.8 s|
 
-El resultado entrega el par categoría - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoria (funny + cool + useful) y a esto se el divide la cantidad de reviews.
+El resultado entrega el par categoría - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoria (funny + cool + useful) y a esto se le divide la cantidad de reviews.
+
+En comparación con el índice de Jaccard, esta métrica toma en cuenta no solo si hizo o no un review si no que tambien considera el puntaje asignado en cada business por cada usuario. Es decir los usuarios serán iguales si visitaron los mismos lugares y si calificaron de igual manera los business visitados. Empiricamente, con el dataset utilizado, los resultados son bastante similares a los obtenidos con Jaccard pero no se observan tantos 1's por lo que se infiere que es más preciso. Esto se debe a que muchos usuarios solo hacen un review de un solo lugar. Dado lo anterior el par de usuarios que visiten dicho lugar y lo califiquen de igual manera, serán iguales para efectos de esta métricas. Lo anterior se podría "corregir" considerando solo los usuarios que hicieron más de un solo review.
+
+**Dataset Completo** Los diferentes scripts se ejecutarón tambien con el dataset completo y dado el tamaño del conjunto de datos. No fue posible completar la ejecución por falta de memoria. Es importante mencionar que los tiempos de ejecución pasaron de segundos a varios minutos (>20).
 
 
 
