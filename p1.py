@@ -8,9 +8,21 @@ import time
 class UsersCount(MRJob):
     INPUT_PROTOCOL = JSONValueProtocol
 
+    def createWordList(self, line):
+        wordList2 =[]
+        wordList1 = line.split()
+        for word in wordList1:
+            cleanWord = ""
+            for char in word:
+                if char in '!,.?":;0123456789':
+                    char = ""
+                cleanWord += char
+            wordList2.append(cleanWord)
+        return wordList2
+
     def mapper_separate_text(self, _, line):
         review = line['review_id']
-        text = line['text'].split()
+        text = self.createWordList(line['text'])
         for word in text:
             yield word, review
 
