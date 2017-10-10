@@ -10,12 +10,10 @@ class UsersCount(MRJob):
     def initial_map(self, _, line):
         user_data = line
         if user_data.get("user_id"):
-            # movie_id, ["user", user_id]
-            # business_id, ["review", user_id]
             score_points = user_data["useful"] + user_data["funny"] + user_data["cool"]
+            # business_id, ["review", user_id, total_points]
             yield user_data["business_id"], ["review", user_data["user_id"], score_points ]
         elif user_data.get("business_id"):
-            # movie_id, ["movie", categories]
             # business_id, ["business", categories]
             yield user_data["business_id"],["business", user_data["categories"]]
 
@@ -37,13 +35,11 @@ class UsersCount(MRJob):
                 for category in categories:
                     yield [element[1], element[2]], category
 
-
     def user_category_reducer(self,key, value):
         category_list = list(value)
         _dict = {i:category_list.count(i) for i in category_list}
         for element in _dict.items():
             yield element[0], [key, element[1]]
-
 
     def get_max_reducer(self,key, value):
         max_category_list = list(value)
