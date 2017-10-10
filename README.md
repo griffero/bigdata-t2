@@ -59,6 +59,8 @@ entre todos los reviews. Si es unica se emite el id_review, 1 y luego otro *redu
 **Pregunta:** Usando mrjob, encuentre los usuarios más similares según el índice de Jaccard
 (https://en.wikipedia.org/wiki/Jaccard_index). (Similaridad mayor a 0.5)
 
+![alt jaccard index](https://media.licdn.com/mpr/mpr/shrinknp_800_800/AAEAAQAAAAAAAAS9AAAAJGUyMmRhMDZhLWM4MjgtNGY4Zi1hNzMyLWNkMTc0NWEzYjQ5MQ.png)
+
 
 ```
 python p2.py review_short.json
