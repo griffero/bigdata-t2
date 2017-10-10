@@ -40,16 +40,16 @@ dataset. Utilice un split simple, por espacios, removiendo antes todos los signo
 python p1.py review_short.json
 ```
 
-Para esta pregunta, se utilizó 1 map y 3 reduce. El funcionamiento de la consulta es en primer lugar realizar un map 
-entre cada palabra de un review con el id del review mismo. Luego, con un reduce para cada palabra, se revisa si esta es única
-entre todos los reviews. Si es unica se emite el id_review, 1 y luego otro reduce agrupa la cantidad de palabras únicas por cada review. Finalmente un último reduce busca el máximo determinando así el review más único.
+Para esta pregunta, se utilizó 1 *map* y 3 *reduce*. El funcionamiento de la consulta es en primer lugar realizar un *map* 
+entre cada palabra de un review con el id del review mismo. Luego, con un *reduce* para cada palabra, se revisa si esta es única
+entre todos los reviews. Si es unica se emite el id_review, 1 y luego otro *reduce* agrupa la cantidad de palabras únicas por cada review. Finalmente un último *reduce* busca el máximo determinando así el review más único.
 
 **Resultados**
 
 | Tamaño Dataset |    Review más único    | Cantidad de palabras únicas | Tiempo de ejecución |
 | -------------: |:----------------------:| ---------------------------:|--------------------:|
-|          10.000| uuvlg4oRv4f6p7gB418BVQ |                          111|               19.6 s|
-|          30.000| kkit_FA06i3Ft3-80Al9_w |                          122|               55.2 s|
+|          10.000| uuvlg4oRv4f6p7gB418BVQ |                          94 |               23.5 s|
+|          30.000| kkit_FA06i3Ft3-80Al9_w |                         108 |               70.2 s|
 
 
 ### P2
@@ -62,7 +62,7 @@ entre todos los reviews. Si es unica se emite el id_review, 1 y luego otro reduc
 python p2.py review_short.json
 ```
 
-Para la pregunta nº2 se utilizaron 3 maps y 3 reduce. Primero se hace un map entre user y business. Luego un reduce arma una nueva key que contiene el usuario y la cantidad de reviews que ha hecho y value toma la lista de business donde ha hecho review dicho usuario. Posteriormente, se hace un map business, user-amount of reviews. En el siguiente reduce, utilizando [itertools](https://docs.python.org/2/library/itertools.html) se hace la combinatoria entre todos los pares de usuarios que hicieron review sobre el mismo lugar. Con esto ya se tiene toda la información necesaria para calcular el índice de Jaccard. El siguiente map y reduce simplemente obtienen el índice de Jaccard cuando este es mayor a 0.5.
+Para la pregunta nº2 se utilizaron 3 *maps* y 3 *reduce*. Primero se hace un *map* entre user y business. Luego un *reduce* arma una nueva key que contiene el usuario y la cantidad de reviews que ha hecho y value toma la lista de business donde ha hecho review dicho usuario. Posteriormente, se hace un *map* business, user-amount of reviews. En el siguiente *reduce*, utilizando [itertools](https://docs.python.org/2/library/itertools.html) se hace la combinatoria entre todos los pares de usuarios que hicieron review sobre el mismo lugar. Con esto ya se tiene toda la información necesaria para calcular el índice de [Jaccard](https://en.wikipedia.org/wiki/Jaccard_index). El siguiente *map* y *reduce* simplemente obtienen el índice de Jaccard cuando este es mayor a 0.5.
 
 **Resultados**
 
@@ -83,7 +83,7 @@ pondere los resultados según los votos recibidos en el comentario.
 python p3.py business_short.json review_short.json
 ```
 
-La pregunta nº3 utilizá 2 maps y 3 reduce. El primer map es el encargado de hacer el join entre el archivo business y review. Para hacer esto, se verifica que exista la llave en el JSON. Dado que business.JSON no contiene user_id, se pregunta si esta existe, si existe se hace un yield que incluye en en el valor del elemento la etiqueta "review". En el caso contrario, se utiliza la etiqueta "business". Con esta estrategia, el siguiente reduce verifica para cada elemento de la lista la etiqueta que este posee en la primera posición. En base a esta condición el reduce hace diferentes cosas con el objetivo de que para cada business exista una lista de categorias. Posteriormente un map vincula a cada usuario con sus diferentes categorías donde ha hecho reviews. (recorcemos que el user contiene en su interior tambien la cantidad de votos). Luego un reduce cuenta los reviews que ha hecho el usuario en cada categoría para que finalmente otro reduce determine para cada reduce el user que más reviews realizó.
+La pregunta nº3 utilizá 2 *maps* y 3 *reduce*. El primer map es el encargado de hacer el join entre el archivo business y review. Para hacer esto, se verifica que exista la llave en el JSON. Dado que business.JSON no contiene user_id, se pregunta si esta existe, si existe se hace un yield que incluye en en el valor del elemento la etiqueta "review". En el caso contrario, se utiliza la etiqueta "business". Con esta estrategia, el siguiente *reduce* verifica para cada elemento de la lista la etiqueta que este posee en la primera posición. En base a esta condición el *reduce* hace diferentes cosas con el objetivo de que para cada business exista una lista de categorias. Posteriormente un *map* vincula a cada usuario con sus diferentes categorías donde ha hecho reviews. (recorcemos que el user contiene en su interior tambien la cantidad de votos). Luego un *reduce* cuenta los reviews que ha hecho el usuario en cada categoría para que finalmente otro *reduce* determine para cada categoría el user que más reviews realizó.
 
 Cabe destacar que se utilizó el dataset completo de Business. El motivo de lo anterior es que si no se utiliza el data set completo, existe la posibilidad de que existan reviews que no se puedan vincular con el business y por ende con una categoría.
 
@@ -94,7 +94,7 @@ Cabe destacar que se utilizó el dataset completo de Business. El motivo de lo a
 |                 10.000|           Full dataset |                       14.9 s|
 |                 30.000|           Full dataset |                       43.2 s|
 
-El resultado entrega el par categoría - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoria (funny + cool + useful) y a esto se el divide la cantidad de reviews.
+El resultado entrega el par categoría - usuario con más reviews. Dentro de cada usuario, se hace la ponderación donde se suman los votos obtenidos en la categoría (funny + cool + useful) y a esto se el divide la cantidad de reviews.
 
 ### P4
 
@@ -104,7 +104,7 @@ El resultado entrega el par categoría - usuario con más reviews. Dentro de cad
 python p4.py review_short.json
 ```
 
-La manera de abordar el problema 4 es bastante similar al de la p2. El problema se solucionó con 1 map y 3 reduce. Primero se hace un map usuario , business-star donde la estrella esta normalizada (dividida en 5). Luego, el reduce obtiene para cada usuario la lista de business donde hizo reviews, y suma la cantidad de estrellas totales en todos los reviews de ese usuario. Luego emite para cada business con el usuario respectivo del review que además contiene la suma de las estrellas del usuario y las estrellas que le otorgó a ese business en particular. Un siguiente reduce utilizando itertools al igual que en la P2 crea para cada business pares de usuarios que hicieron review. Finalmente un último reduce va tomando estos pares de usuarios y calcula la métrica de similaridad. Todos los datos necesarios para calcular la similaridad estan contenidos en el par key-value. key continene lo necesario para el dividendo y value lo que se necesita para el divisor.
+La manera de abordar el problema 4 es bastante similar al de la p2. El problema se solucionó con 1 *map* y 3 *reduce*. Primero se hace un *map* usuario , business-star donde la estrella esta normalizada (dividida en 5). Luego, el *reduce* obtiene para cada usuario la lista de business donde hizo reviews, y suma la cantidad de estrellas totales en todos los reviews de ese usuario. Luego emite para cada business, el usuario respectivo del review que además contiene la suma de las estrellas del usuario y las estrellas que le otorgó a ese business en particular. Un siguiente reduce utilizando itertools al igual que en la P2 crea para cada business pares de usuarios que hicieron review. Finalmente un último *reduce* va tomando estos pares de usuarios y calcula la métrica de similaridad. Todos los datos necesarios para calcular la similaridad estan contenidos en el par key-value. key continene lo necesario para el dividendo y value lo que se necesita para el divisor.
 
 **Resultados**
 
