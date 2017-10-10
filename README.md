@@ -59,8 +59,7 @@ entre todos los reviews. Si es unica se emite el id_review, 1 y luego otro *redu
 **Pregunta:** Usando mrjob, encuentre los usuarios más similares según el índice de Jaccard
 (https://en.wikipedia.org/wiki/Jaccard_index). (Similaridad mayor a 0.5)
 
-![alt jaccard index](https://media.licdn.com/mpr/mpr/shrinknp_800_800/AAEAAQAAAAAAAAS9AAAAJGUyMmRhMDZhLWM4MjgtNGY4Zi1hNzMyLWNkMTc0NWEzYjQ5MQ.png)
-
+![alt jaccard index](https://i.imgur.com/13XqjK0.png)
 
 ```
 python p2.py review_short.json
@@ -81,7 +80,6 @@ Con el conjunto de datos utilizado, se puede evidenciar que existen muchos pares
 
 **Pregunta:** Usando mrjob, encuentre los usuarios con más reviews por cada categoría, y luego
 pondere los resultados según los votos recibidos en el comentario.
-
 
 ```
 python p3.py business_short.json review_short.json
@@ -127,7 +125,5 @@ En comparación con el índice de Jaccard, esta métrica toma en cuenta no solo 
 
 
 **Conclusión** Para finalizar, se pudo dejar en evidencia la fácilidad con la que escala Map Reduce pero tambien como esta técnica va dependiendo del tamaño del dataset en terminos de la memoria necesaria para su ejecución. Tambien, se concluyó que Map Reduce permite realizar consultas extremandamente útiles a la hora de analizar el comportamiento de los usuarios. Estas consultas en un esquema de base de datos tradicional sería extremadamente ineficiente. Además, se destaca la fácilidad que otorga mrjob al momento de trabajar. Por su estructura de pipeline, se pueden construir funciones independientes de manera que el código se puede probar de manera desacoplada fácilitando así la construcción de las consultas.
-
-
 
 
