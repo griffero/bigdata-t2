@@ -122,8 +122,7 @@ En comparación con el índice de Jaccard, esta métrica toma en cuenta no solo 
 **Dataset Completo** Los diferentes scripts se ejecutarón tambien con el dataset completo y dado el tamaño del conjunto de datos. No fue posible completar la ejecución por falta de memoria. Es importante mencionar que los tiempos de ejecución pasaron de segundos a varios minutos (>20).
 
 
-
-
+**Conclusión** Para finalizar, se pudo dejar en evidencia la fácilidad con la que escala Map Reduce pero tambien como esta técnica va dependiendo del tamaño del dataset en terminos de la memoria necesaria para su ejecución. Tambien, se concluyó que Map Reduce permite realizar consultas extremandamente útiles a la hora de analizar el comportamiento de los usuarios. Estas consultas en un esquema de base de datos tradicional sería extremadamente ineficiente. Además, se destaca la fácilidad que otorga mrjob al momento de trabajar. Por su estructura de pipeline, se pueden construir funciones independientes de manera que el código se puede probar de manera desacoplada fácilitando así la construcción de las consultas.
 
 
 
