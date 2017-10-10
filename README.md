@@ -1,7 +1,7 @@
-## Almacenamiento y Procesamiento Masivo de Datos - Tarea 2 
+## Almacenamiento y Procesamiento Masivo de Datos 201720 - Tarea 2
 **Universidad de los Andes**
 
-**Alumno:** Cristóbal Griffero
+**Alumno:** Cristóbal Griffero C.
 
 ### Objetivo
 
@@ -85,14 +85,14 @@ pondere los resultados según los votos recibidos en el comentario.
 python p3.py business_short.json
 ```
 
-Para la pregunta nº2 se utilizaron 3 maps y 3 reduce. Primero se hace un map entre user y business. Luego un reduce arma una nueva key que contiene el usuario y la cantidad de reviews que ha hecho y como value toma una lista de business donde ha hecho review. Posteriormente, se hace un map business - user, amount of reviews. En el siguiente reduce, utilizando [itertools](https://docs.python.org/2/library/itertools.html) se hace la combinatoria entre todos los pares de usuarios que hicieron review sobre el mismo lugar. Con esto ya se tiene toda la información necesaria para calcular el índice de Jaccard. El siguiente map y reduce simplemente obtienen el indice de Jaccard cuando este es mayor a 0.5
+La pregunta nº3 utilizá 2 maps y 3 reduce. El primer map es el encargado de hacer el join entre el archivo business y review. Para hacer esto, se verifica que exista la llave en el JSON. Dado que business.JSON no contiene user_id, se pregunta si esta existe, si existe se hace un yield que incluye en en el valor del elemento la etiqueta "review". En el caso contrario, se utiliza la etiqueta "business". Con esta estrategia, el siguiente reduce verifica para cada elemento de la lista la etiqueta que este posee en la primera posición. En base a esta condición el reduce hace diferentes cosas con el objetivo de que para cada business exista una lista de categorias. Posteriormente un 
 
 **Resultados**
 
-| Tamaño Dataset | Tiempo de ejecución |
-| -------------: |--------------------:|
-| 10.000         |              137.6 s|
-| 30.000         |               55.2 s|
+| Tamaño Dataset Reviews| Tamaño Dataset Business|     Tiempo de ejecución     |
+| --------------------: | ---------------------: |----------------------------:|
+|                 10.000|           Full dataset |                       14.9 s|
+|                 30.000|           Full dataset |                       43.2 s|
 
 Con el conjunto de datos utilizado, se puede evidenciar que existen muchos pares de usuarios con índice de Jaccard = 1. Esto se debe a que existen usuarios que solamente hicieron reviews sobre un establecimiento por lo que cualquier par de usuarios que hacen reviews de un solo establecimiento son iguales en términos del índice de Jaccard.
 
